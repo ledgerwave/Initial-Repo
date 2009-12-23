@@ -9,6 +9,12 @@ execfile("includes/perspective.py")
 execfile("includes/graphics.py")
 execfile("includes/callibrate.py")
 
+
+speed = FpsMeter() # Set up FPS Meter
+perspective = Perspective() # Make Perspective Warp Map
+gfx = Graphics() # Set up graphics drawing class
+callib = Callibrate() # Set up callibrate class
+
 # Mode changer for slider
 def change_mode(position):
     global mode
@@ -19,18 +25,6 @@ def handleclick(event, x, y, flags, param):
     global mode
     if mode==2 and event==CV_EVENT_LBUTTONDOWN: # Callibrate Mode
         callib.click(x, y)
-
-# Set up FPS Meter
-speed = FpsMeter()
-
-# Set up graphics drawing class
-gfx = Graphics()
-
-# Set up callibrate class
-callib = Callibrate()
-
-# Make Perspective Warp Map
-perspective = Perspective()
 
 # Make window & set click handler
 cvNamedWindow(window_name, 1)

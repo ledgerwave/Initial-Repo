@@ -8,12 +8,14 @@ execfile("includes/performance.py")
 execfile("includes/perspective.py")
 execfile("includes/graphics.py")
 execfile("includes/callibrate.py")
+execfile("includes/tracker.py")
 
 ## Set up classes
 speed = FpsMeter() # Set up FPS Meter
 perspective = Perspective() # Make Perspective Warp Map
 gfx = Graphics() # Set up graphics drawing class
 callib = Callibrate() # Set up callibrate class
+tracker = Tracker() # Set up motion tracker
 
 # Mode changer for slider
 def change_mode(position):
@@ -52,7 +54,7 @@ while True:
         frame=gfx.drawquad(frame)
     
     elif mode==1: # Track/effects Mode
-        frame=tracker.track(frame)
+        frame=tracker.track(frame, lastframe)
         frame.gfx.draw_mode(frame, "Track Mode")
        
     elif mode==2: # Transform Mode
@@ -64,6 +66,9 @@ while True:
 
     # Write FPS
     frame = gfx.fps(frame, speed.go())
+    
+    # For motion tracking
+    lastframe=cvCloneImage(frame)
     
     # Post frame to window
     cvShowImage(window_name, frame)

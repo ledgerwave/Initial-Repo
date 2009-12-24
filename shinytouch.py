@@ -9,7 +9,7 @@ execfile("includes/perspective.py")
 execfile("includes/graphics.py")
 execfile("includes/callibrate.py")
 
-
+## Set up classes
 speed = FpsMeter() # Set up FPS Meter
 perspective = Perspective() # Make Perspective Warp Map
 gfx = Graphics() # Set up graphics drawing class
@@ -38,7 +38,7 @@ cvSetCaptureProperty(camera, CV_CAP_PROP_FRAME_HEIGHT, height)
 mode=0 # Normal Mode
 
 # Create Mode Slider
-cvCreateTrackbar("Mode", window_name, 0, 2, change_mode);
+cvCreateTrackbar("Mode", window_name, 0, 3, change_mode);
 
 
 # Main Loop.
@@ -50,12 +50,15 @@ while True:
     if mode==0: # Normal Mode
         frame=gfx.draw_mode(frame,"Normal")
         frame=gfx.drawquad(frame)
-        
-    elif mode==1: # Transform Mode
+    
+    elif mode==1: # Track/effects Mode
+        frame=tracker.track(frame)
+        frame.gfx.draw_mode(frame, "Track Mode")
+       
+    elif mode==2: # Transform Mode
         frame = perspective.warp(frame)
         frame=gfx.draw_mode(frame,"Transform")
-
-    elif mode==2: # Callibrate Mode
+    elif mode==3: # Callibrate Mode
         frame=gfx.draw_mode(frame,"Callibrate Mode")
         frame=gfx.drawquad(frame)
 

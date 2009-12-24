@@ -1,3 +1,5 @@
+#ShinyTouch V2 OpenCV
+
 # Modules
 from opencv.highgui import *
 from opencv.cv import *

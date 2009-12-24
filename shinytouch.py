@@ -1,4 +1,6 @@
-#ShinyTouch V2 OpenCV
+# ShinyTouch V2 OpenCV
+# Coded By Cameron Martin (DDLShack)
+# and Antimatter15 (Some weird name like roderick or ned)
 
 # Modules
 from opencv.highgui import *

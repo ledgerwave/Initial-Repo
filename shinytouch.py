@@ -1,14 +1,16 @@
+#!/usr/bin/python
 # Modules
 from opencv.highgui import *
 from opencv.cv import *
+import os
 
 # Classes
-execfile("config.py")
-execfile("includes/performance.py")
-execfile("includes/perspective.py")
-execfile("includes/graphics.py")
-execfile("includes/callibrate.py")
-execfile("includes/tracker.py")
+execfile(os.getcwd()+"/config.py")
+execfile(os.getcwd()+"/includes/performance.py")
+execfile(os.getcwd()+"/includes/perspective.py")
+execfile(os.getcwd()+"/includes/graphics.py")
+execfile(os.getcwd()+"/includes/callibrate.py")
+execfile(os.getcwd()+"/includes/tracker.py")
 
 ## Set up classes
 speed = FpsMeter() # Set up FPS Meter
@@ -42,37 +44,47 @@ mode=0 # Normal Mode
 # Create Mode Slider
 cvCreateTrackbar("Mode", window_name, 0, 3, change_mode);
 
+running=True
 
-# Main Loop.
-while True:
-    
-    # Get Frame
-    frame = cvQueryFrame(camera)
+lastframe=cvCreateImage(cvSize(width, height), 8, 3)
 
-    if mode==0: # Normal Mode
-        frame=gfx.draw_mode(frame,"Normal")
-        frame=gfx.drawquad(frame)
-    
-    elif mode==1: # Track/effects Mode
-        frame=tracker.track(frame, lastframe)
-        frame.gfx.draw_mode(frame, "Track Mode")
-       
-    elif mode==2: # Transform Mode
-        frame = perspective.warp(frame)
-        frame=gfx.draw_mode(frame,"Transform")
-    
-    elif mode==3: # Callibrate Mode
-        frame=gfx.draw_mode(frame,"Callibrate Mode")
-        frame=gfx.drawquad(frame)
+try:
+	# Main Loop.
+	while running:
+		
+		# Get Frame
+		frame = cvQueryFrame(camera)
+		
+		if mode==0: # Normal Mode
+			frame=gfx.draw_mode(frame,"Normal")
+			frame=gfx.drawquad(frame)
+		
+		elif mode==1: # Track/effects Mode
+			
+			# Preserve the frame
+			preserved_frame=cvCloneImage(frame)
+			
+			frame=tracker.track(frame, lastframe)
+			frame=gfx.draw_mode(frame, "Track Mode")
+			
+			# Make a copy
+			lastframe=cvCloneImage(preserved_frame)
+		   
+		elif mode==2: # Transform Mode
+			frame = perspective.warp(frame)
+			frame=gfx.draw_mode(frame,"Transform")
+		
+		elif mode==3: # Callibrate Mode
+			frame=gfx.draw_mode(frame,"Callibrate Mode")
+			frame=gfx.drawquad(frame)
 
-    # Write FPS
-    frame = gfx.fps(frame, speed.go())
-    
-    # For motion tracking
-    lastframe=cvCloneImage(frame)
-    
-    # Post frame to window
-    cvShowImage(window_name, frame)
-    
-    # Wait for 1ms (to stop freezing)
-    cvWaitKey(2)
+		# Write FPS
+		frame = gfx.fps(frame, speed.go())
+		
+		# Post frame to window
+		cvShowImage(window_name, frame)
+		
+		# Wait for 1ms (to stop freezing)
+		cvWaitKey(2)
+except KeyboardInterrupt:
+	running=False

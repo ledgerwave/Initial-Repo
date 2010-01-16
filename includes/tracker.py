@@ -3,10 +3,12 @@ class Tracker:
         pass
     
     def track(self, frame, lastframe):
-        threshold=128
-        
-        diff=cvCreateImage(cvSize(frame.size[0], frame.size[1]), frame.depth, 1)
-        bitimage=cvCreateImage(cvSize(frame.size[0], frame.size[1]), frame.depth, 1)
+        threshold=50
+
+        diff=cvCreateImage(cvSize(frame.width, frame.height), frame.depth, 3)
+        bitimage=cvCreateImage(cvSize(frame.width, frame.height), frame.depth, 3)
+                
         cvAbsDiff(frame,lastframe,diff)
-        cvThreshold(diff,bitimage,threshold,255,CV_THRESH_BINARY)
+        #cvThreshold(diff,bitimage,threshold,255,CV_THRESH_BINARY)
+        cvThreshold(diff,bitimage,threshold,255,CV_THRESH_OTSU)
         return bitimage

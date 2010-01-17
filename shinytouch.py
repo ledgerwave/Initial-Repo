@@ -32,7 +32,7 @@ def change_threshold(thresh):
 # Universal function for handling a click
 def handleclick(event, x, y, flags, param):
     global mode
-    if mode==2 and event==CV_EVENT_LBUTTONDOWN: # Callibrate Mode
+    if mode==3 and event==CV_EVENT_LBUTTONDOWN: # Callibrate Mode
         callib.click(x, y)
 
 # Make window & set click handler
@@ -67,8 +67,14 @@ try:
 		if mode==0: # Normal Mode
 			frame=gfx.draw_mode(frame,"Normal")
 			frame=gfx.drawquad(frame)
+			
+		elif mode==1: # Transform Mode
+			frame = perspective.warp(frame)
+			frame=gfx.draw_mode(frame,"Transform")
 		
-		elif mode==1: # Track/effects Mode
+		if mode==2: # Track/effects Mode
+			# Warp the frame
+			frame=perspective.warp(frame)
 			
 			# Preserve the frame
 			preserved_frame=cvCloneImage(frame)
@@ -78,10 +84,6 @@ try:
 			
 			# Make a copy
 			lastframe=cvCloneImage(preserved_frame)
-		   
-		elif mode==2: # Transform Mode
-			frame = perspective.warp(frame)
-			frame=gfx.draw_mode(frame,"Transform")
 		
 		elif mode==3: # Callibrate Mode
 			frame=gfx.draw_mode(frame,"Callibrate Mode")

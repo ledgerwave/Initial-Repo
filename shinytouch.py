@@ -24,6 +24,11 @@ def change_mode(position):
     global mode
     mode=position
 
+# Motion threshold slider
+def change_threshold(thresh):
+	global motion_threshold
+	motion_threshold=thresh
+
 # Universal function for handling a click
 def handleclick(event, x, y, flags, param):
     global mode
@@ -43,6 +48,10 @@ mode=0 # Normal Mode
 
 # Create Mode Slider
 cvCreateTrackbar("Mode", window_name, 0, 3, change_mode);
+
+# Create Motion threshold slider
+motion_threshold=0
+cvCreateTrackbar("Threshold", window_name, 0, 255, change_threshold);
 
 running=True
 
@@ -65,7 +74,7 @@ try:
 			preserved_frame=cvCloneImage(frame)
 			
 			frame=tracker.track(frame, lastframe)
-			frame=gfx.draw_mode(frame, "Track Mode")
+			frame=gfx.draw_mode(frame, "Motion Mode")
 			
 			# Make a copy
 			lastframe=cvCloneImage(preserved_frame)

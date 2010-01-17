@@ -8,4 +8,4 @@ camnum=0
 # Name of the HighGUI window
 window_name = "ShinyTouch"
 
-execfile("config_warp.py")
+execfile(os.getcwd()+"/config_warp.py")

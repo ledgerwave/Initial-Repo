@@ -86,6 +86,7 @@ try:
 			lastframe=cvCloneImage(preserved_frame)
 		
 		elif mode==3: # Callibrate Mode
+			frame=gfx.callibration(frame, callib.clicks)
 			frame=gfx.draw_mode(frame,"Callibrate Mode")
 			frame=gfx.drawquad(frame)
 

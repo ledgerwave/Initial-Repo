@@ -30,4 +30,20 @@ class Graphics:
         cvPutText(frame, "FPS: "+str(fps), cvPoint(5,height-10), font, cvScalar(255,255,255))
 
         return frame
-
+    
+    def callibration(self, frame, clicks):
+        global width, height
+        if clicks == 0:
+          point1 = cvPoint(0,0)
+          point2 = cvPoint(20,20)
+        elif clicks == 1:
+          point1 = cvPoint(width - 20, 0)
+          point2 = cvPoint(width, 20)
+        elif clicks == 2:
+          point1 = cvPoint(width - 20, height - 20)
+          point2 = cvPoint(width, height)
+        elif clicks == 3:
+          point1 = cvPoint(0, height-20)
+          point2 = cvPoint(20, height)
+        cvRectangle(frame, point1, point2, cvScalar(0,255,255), 20)
+        return frame

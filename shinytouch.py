@@ -32,7 +32,7 @@ def change_threshold(thresh):
 # Universal function for handling a click
 def handleclick(event, x, y, flags, param):
     global mode
-    if mode==3 and event==CV_EVENT_LBUTTONDOWN: # Callibrate Mode
+    if mode==4 and event==CV_EVENT_LBUTTONDOWN: # Callibrate Mode
         callib.click(x, y)
 
 # Make window & set click handler
@@ -47,7 +47,7 @@ cvSetCaptureProperty(camera, CV_CAP_PROP_FRAME_HEIGHT, height)
 mode=0 # Normal Mode
 
 # Create Mode Slider
-cvCreateTrackbar("Mode", window_name, 0, 3, change_mode);
+cvCreateTrackbar("Mode", window_name, 0, 4, change_mode);
 
 # Create Motion threshold slider
 motion_threshold=0
@@ -72,20 +72,26 @@ try:
 			frame = perspective.warp(frame)
 			frame=gfx.draw_mode(frame,"Transform")
 		
-		if mode==2: # Track/effects Mode
+		elif mode==2 or mode==3: # Track/effects Mode
 			# Warp the frame
 			frame=perspective.warp(frame)
 			
 			# Preserve the frame
 			preserved_frame=cvCloneImage(frame)
 			
-			frame=tracker.track(frame, lastframe)
-			frame=gfx.draw_mode(frame, "Motion Mode")
-			
+			# Filter out the motion
+			frame=tracker.filter_motion(frame, lastframe)
+						
 			# Make a copy
 			lastframe=cvCloneImage(preserved_frame)
 		
-		elif mode==3: # Callibrate Mode
+			if mode==2:
+				frame=gfx.draw_mode(frame, "Motion Mode")
+			elif mode==3:
+				#print int(repr(frame.imageData[0])[3:-1], 16)
+				frame=gfx.draw_mode(frame, "Track Mode")
+		
+		elif mode==4: # Callibrate Mode
 			frame=gfx.callibration(frame, callib.clicks)
 			frame=gfx.draw_mode(frame,"Callibrate Mode")
 			frame=gfx.drawquad(frame)
@@ -95,6 +101,7 @@ try:
 		
 		# Post frame to window
 		cvShowImage(window_name, frame)
+		
 		
 		# Wait for 1ms (to stop freezing)
 		cvWaitKey(2)

@@ -3,3 +3,8 @@
 ##########################
 
 Open Source touchscreen utility with no external hardware except a webcam.
+
+TODO:
+* Make a 'shinytablet' which tracks the finger but does not track a touch.
+* Make it work with dynamic backgrounds
+* Make it detect reflections
